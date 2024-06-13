@@ -1,4 +1,4 @@
-/*const fs = require('node:fs')
+/* const fs = require('node:fs')
 
 fs.readdir('../', (err, files) => {
     if(err){
@@ -12,11 +12,11 @@ fs.readdir('../', (err, files) => {
 })
 */
 
-
 // Versión con fs/promises
 
 const fs = require('node:fs/promises')
 const path = require('node:path')
+const pc = require('picocolors')
 
 const folder = process.argv[2] ?? '.'
 
@@ -39,22 +39,35 @@ fs.readdir(folder)
 */
 
 async function ls (folder) {
-    let files;
-    try{
-        files = await fs.readdir(folder);
-    } catch (e){
-        console.error('No se pudo leer el directorio: ', folder);
-        process.exit(1)
+  let files
+  try {
+    files = await fs.readdir(folder)
+  } catch (e) {
+    console.error(pc.red(`No se pudo leer el directorio: ${folder}`))
+    process.exit(1)
+  }
+
+  const filesPromises = files.map(async file => {
+    const filePath = path.join(folder, file)
+    let stats
+    try {
+      stats = await fs.stat(filePath) // stat = información del archivo
+    } catch (e) {
+      console.error(`No se puedo obtener la información del archivo: ${filePath}`)
+      process.exit(1)
     }
 
-    const filesPromises = files.map(async file => {
-        const filePath = path.join(folder, file);
-        try {
-            const fileStats = await fs.stat(filePath)
-        } catch (e) {
-            console.error('No se puedo obtener la información del archivo: ', filePath);
-            process.exit(1);
-        }
-    })
+    const isDirectory = stats.isDirectory()
+    const fileType = isDirectory ? 'd' : 'f'
+    const fileSize = stats.size
+    const fileModified = stats.mtime.toLocaleString()
 
+    return `${fileType === 'd' ? pc.blue(fileType) : pc.green(fileType)} - ${pc.bold(file.padEnd(20))} ${pc.yellow(fileSize.toString().padStart(5))} ${pc.magenta(fileModified)}`
+  })
+
+  const filesInfo = await Promise.all(filesPromises)
+
+  filesInfo.forEach(fileInfo => console.log(fileInfo))
 }
+
+ls(folder)
