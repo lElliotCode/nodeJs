@@ -1,33 +1,15 @@
 {
   "name": "nodejs",
   "version": "1.0.0",
-  "description": "Curso práctico NodeJs",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/lElliotCode/nodeJs.git"
-  },
-  "keywords": [
-    "curso",
-    "node",
-    "nodeJs"
-  ],
-  "author": "lElliotCode",
+  "keywords": [],
+  "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/lElliotCode/nodeJs/issues"
-  },
-  "homepage": "https://github.com/lElliotCode/nodeJs#readme",
-  "dependencies": {
-    "picocolors": "1.0.1"
-  },
+  "description": "",
   "devDependencies": {
-    "standard": "17.1.0"
-  },
-  "eslintConfig": {
-    "extends": "standard"
+    "standard": "^17.1.0"
   }
 }
